@@ -1,0 +1,45 @@
+doctype html
+html(lang='es')
+	head
+		meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no')
+		meta(name="theme-color", content="white")
+		//link(rel="shortcut icon" href="/img/icon.png")
+		
+		title anatomy
+		// CSS
+		block css
+		link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+		script(src="https://use.fontawesome.com/b1b012da8d.js")
+		link(href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css', type='text/css', rel='stylesheet', media='screen,projection')
+		//Js
+
+		//Style
+
+		block style
+	body
+		nav.blue-grey.darken-3
+			.nav-wrapper
+				if userName != "undefined"
+					ul.right.hide-on-med-and-down
+						li
+							a.tooltipped(href='/anatomy', data-position='bottom', data-delay='50', data-tooltip='Inicio')
+								i.material-icons home
+						li
+							a.tooltipped(href='add', data-position='bottom', data-delay='50', data-tooltip='Nuevo')
+								i.material-icons add
+						//li
+							a.tooltipped(href='marking', data-position='bottom', data-delay='50', data-tooltip='Editar')
+								i.material-icons mode_edit
+						li
+							a.tooltipped(href='exit', data-position='bottom', data-delay='50', data-tooltip='Salir')
+								i.material-icons exit_to_app
+		//Contenido
+		block content
+
+		// Scripts
+		script(src='https://code.jquery.com/jquery-2.1.1.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js')
+		//script(src='/js/init.js')
+		//script(src='/js/handlebars.js')
+		block js
