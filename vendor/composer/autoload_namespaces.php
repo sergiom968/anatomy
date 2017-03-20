@@ -9,4 +9,6 @@ return array(
     'Pug\\' => array($vendorDir . '/pug-php/pug/src'),
     'JsPhpize' => array($vendorDir . '/js-phpize/js-phpize/src'),
     'Jade\\' => array($vendorDir . '/pug-php/pug/src'),
+    'Gregwar\\Image' => array($vendorDir . '/gregwar/image'),
+    'Gregwar\\Cache' => array($vendorDir . '/gregwar/cache'),
 );

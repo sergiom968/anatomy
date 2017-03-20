@@ -1,6 +1,7 @@
 {
     "require": {
         "pug-php/pug": "^2.5",
-        "phroute/phroute": "^2.1"
+        "phroute/phroute": "^2.1",
+        "gregwar/image": "^2.0"
     }
 }

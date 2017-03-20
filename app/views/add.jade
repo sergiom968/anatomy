@@ -1,4 +1,7 @@
 extends layout
 
 block content
-	h1 Hola Add
+	form(action="test", method="POST")
+		input(type="text" value="test" name="route")
+		input(type="text" value="testName" name="name")
+		input(type="submit" value="send")

@@ -1,0 +1,51 @@
+extends layout
+
+block style
+	style.
+		body{
+			overflow: auto;
+		}
+		canvas{
+			background-image: url('public/img/test.jpg');
+			background-repeat:  no-repeat;
+			background-size: 800px 600px;
+			cursor: crosshair;
+		}
+
+block content
+	.row
+		.col.m9
+			.center
+				canvas#canvas(width="800" height="600" )
+		.col.m3#rw
+			ul.collapsible.col.s12(data-collapsible='accordion')
+				li(v-for="structure, index in structures")
+					.collapsible-header(@click="_structure = index;")
+						i.material-icons filter_drama
+						| {{structure.structureName}}
+					.collapsible-body.row
+						span
+						
+						select
+							option(value='', disabled='', selected='') Choose your option
+							option(value='1') Option 1
+							option(value='2') Option 2
+							option(value='3') Option 3
+						label Materialize Select
+			pre.col.s12 {{$data}}
+		.col.m3
+	.fixed-action-btn.horizontal.click-to-toggle
+		a.btn-floating.btn-large.red
+			i.material-icons menu
+		ul
+			li
+				a.btn-floating.yellow.darken-1(href="javascript:_structures[_structure].polygons.push([]); _polygon = _structures[_structure].polygons.length-1; _draw = true;")
+					i.material-icons add
+			li
+				a.btn-floating.green(href="javascript:_structures.push({structureId: null, structureName: '', polygons: [[]]}); _structure = _structures.length-1; _draw = true;")
+					i.material-icons add_to_photos
+			li
+				a.btn-floating.blue
+					i.material-icons send
+block js
+	script.

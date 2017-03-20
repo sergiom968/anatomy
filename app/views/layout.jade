@@ -5,13 +5,12 @@ html(lang='es')
 		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no')
 		meta(name="theme-color", content="white")
 		//link(rel="shortcut icon" href="/img/icon.png")
-		
 		title anatomy
 		// CSS
 		block css
 		link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
-		script(src="https://use.fontawesome.com/b1b012da8d.js")
-		link(href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css', type='text/css', rel='stylesheet', media='screen,projection')
+		//script(src="https://use.fontawesome.com/b1b012da8d.js")
+		link(href='public/css/materialize.min.css', type='text/css', rel='stylesheet', media='screen,projection')
 		//Js
 
 		//Style
@@ -20,7 +19,7 @@ html(lang='es')
 	body
 		nav.blue-grey.darken-3
 			.nav-wrapper
-				if userName != "undefined"
+				if userName != ""
 					ul.right.hide-on-med-and-down
 						li
 							a.tooltipped(href='/anatomy', data-position='bottom', data-delay='50', data-tooltip='Inicio')
@@ -38,8 +37,10 @@ html(lang='es')
 		block content
 
 		// Scripts
-		script(src='https://code.jquery.com/jquery-2.1.1.min.js')
-		script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js')
-		//script(src='/js/init.js')
-		//script(src='/js/handlebars.js')
+		script(src='public/js/jquery.min.js')
+		script(src='public/js/materialize.min.js')
+		script(src='public/js/vue.min.js')
+		//script(src='public/js/main.js')
+		script#helper(src='public/js/main.js', data-origin="#{origin}")
+		
 		block js

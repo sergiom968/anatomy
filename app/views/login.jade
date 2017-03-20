@@ -1,5 +1,45 @@
-.container
-	.section
-		.row
-			.col.s12.m8.offset-m2
-				h1.center.light Login
+extends layout
+
+block content
+	.container
+		.section
+			.row
+				.col.s12.m8.offset-m2
+					h4.center.light Debe ingresar para acceder a esta función.
+					form#formLogin(action='/control', method='POST', @submit="login(event);")
+						h3.col.s12.center Ingreso
+						.input-field.col.s10.offset-s1
+							input#txtuserName.validate.black-text(type='text', name='userName', required)
+							label(for='txtuserName') User
+						.input-field.col.s10.offset-s1
+							input#txtpass.validate.black-text(type='password', name='pass', required)
+							label(for='txtpass') Contraseña
+						.col.s12
+							p.red-text.errText.center(style='display: none;') Usuario o contraseña incorrecta!
+							button#btnSend.btn.blue.darken-3.col.s4.offset-s4.waves-effect.waves-ligh(type="submit") Ingresar
+block js
+	script(src="public/js/vue.min.js")
+	script(src="public/js/vue-resource.min.js")
+	script.
+		new Vue({
+			el: "#formLogin",
+			data: {
+				test: []
+			},
+			methods: {
+				login: function(event){
+					event.preventDefault();
+					var userName = this.$el.querySelector("input[name='userName']").value;
+					var password = this.$el.querySelector("input[name='pass']").value;
+					this.$http.post("http://localhost/ProjectInteractiveAnatomy/control/controler.php", {route: "login", user: userName, password: password}, {emulateJSON: true})
+						.then(function(res){
+							this.test = res.body;
+							if(res.body.bool == "true"){
+								window.location.href = "/anatomy"
+							}else{
+								alert("error");
+							}
+						});
+				}
+			}
+		});
