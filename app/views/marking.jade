@@ -1,51 +1,81 @@
 extends layout
 
 block style
+	-var image = data[0]
 	style.
 		body{
-			overflow: auto;
+			overflow: hidden;
 		}
 		canvas{
-			background-image: url('public/img/test.jpg');
+			background-image: url('#{image.image}');
 			background-repeat:  no-repeat;
 			background-size: 800px 600px;
 			cursor: crosshair;
 		}
+		#rw{
+			max-height: 100%;
+			overflow: auto;
+		}
+		.select2{
+			margin-bottom: 10px;
+		}
+
 
 block content
+	//pre #{data}
 	.row
+		.col.m3#rw
+			ul.collapsible(data-collapsible='accordion')
+				li(v-for="structure, index in structures")
+					.collapsible-header(@click="_structure = index; render(); _draw = false;")
+						span.green-text
+							i.material-icons insert_photo
+						| {{structure._structureName}}
+						a.red-text.text-darken-1(@click="deleteStructure(index);")
+							i.material-icons.right cancel
+					.collapsible-body
+						//span
+							.input-field
+								i.material-icons.prefix textsms
+								input#autocomplete-input.autocomplete(type='text')
+								label(for='autocomplete-input') Autocomplete
+						span
+							.input-field
+								textarea#textarea1.materialize-textarea(v-model="structure._brandDescription")
+								label(for='textarea1') Descripción
+
+							select(style="width: 100%;")
+								option(value='1') Option 1
+								option(value='2') Option 2
+								option(value='3') Option 3
+							select(style="width: 100%;")
+							select(style="width: 100%;")
+			pre.col.s12 {{$data}}
 		.col.m9
 			.center
 				canvas#canvas(width="800" height="600" )
-		.col.m3#rw
-			ul.collapsible.col.s12(data-collapsible='accordion')
-				li(v-for="structure, index in structures")
-					.collapsible-header(@click="_structure = index;")
-						i.material-icons filter_drama
-						| {{structure.structureName}}
-					.collapsible-body.row
-						span
-						
-						select
-							option(value='', disabled='', selected='') Choose your option
-							option(value='1') Option 1
-							option(value='2') Option 2
-							option(value='3') Option 3
-						label Materialize Select
-			pre.col.s12 {{$data}}
 		.col.m3
-	.fixed-action-btn.horizontal.click-to-toggle
+	.fixed-action-btn.click-to-toggle
 		a.btn-floating.btn-large.red
 			i.material-icons menu
 		ul
 			li
-				a.btn-floating.yellow.darken-1(href="javascript:_structures[_structure].polygons.push([]); _polygon = _structures[_structure].polygons.length-1; _draw = true;")
+				a.btn-floating.yellow.darken-1.waves-effect.waves-light(href="javascript:addPolygon();")
 					i.material-icons add
 			li
-				a.btn-floating.green(href="javascript:_structures.push({structureId: null, structureName: '', polygons: [[]]}); _structure = _structures.length-1; _draw = true;")
+				a.btn-floating.green.waves-effect.waves-light(href="javascript:addStructure();")
 					i.material-icons add_to_photos
 			li
-				a.btn-floating.blue
-					i.material-icons send
+				a.btn-floating.blue.waves-effect.waves-light(href="javascript:save(false);")
+					i.material-icons save
+
 block js
 	script.
+		var imageId = "#{image.Id_Image}";
+		var json = ("#{data}");
+		json = json.replace(/&quot;/g,'"');
+		json = JSON.parse(json);
+		_structures = json;
+		vueMarking();
+		render();
+		$('select').select2();
