@@ -20,6 +20,7 @@ switch(origin){
 		ctx.fillStyle ="#FFC107";
 		ctx.strokeStyle = "#FFC107";
 		align();
+		setInterval('save(true)',180000)
 		/*************************************Canvas Functions**********************************/
 		canvas.addEventListener('mousedown', function(evt){//Listen click on canvas
 			var mousePos = oMousePos(canvas, evt);
@@ -56,7 +57,7 @@ switch(origin){
 						_structures[_structure].polygons[_line.polygon].splice(_line.index, 0, {x: mousePos.x, y: mousePos.y});
 						render();
 					}else{
-						alert("ok1");	
+						//alert("ok1");	
 					}
 				}
 			}
@@ -85,7 +86,9 @@ function vueMarking(){
 			structures: _structures
 		},
 		updated: function(){
-			$('select').select2();
+			$('.systems').select2({
+				data: jsonStructures
+			});
 		}
 	});
 }
@@ -206,42 +209,73 @@ function addPolygon(){
 }
 
 function addStructure(){
-	_structures.push({_brandId: null, _brandDescription: null, _structureId: null, _structureName: null, polygons: [[]]});
+	_structures.push({_brandId: code(), _brandDescription: null, _structureId: null, _structureName: null, polygons: [[]]});
 	_structure = (_structures.length - 1);
 	_polygon = 0;
 	_draw = true;
 	render();
 }
 
-function deleteStructure(index){
-	_structures.splice(index, 1);
-	if(_structures.length == 0){
-		addStructure();
-	}else{
-		_structure = (_structures.length - 1);
-		_polygon = (_structures[_structure].polygons.length - 1);
-		render();
-	}
+function deleteBrand(index, _brandId){
+	ajax("json", {route: "deleteBrand", _brandId: _brandId}, function(res){
+		if(res.state){
+			_structures.splice(index, 1);
+			if(_structures.length == 0){
+				addStructure();
+			}else{
+				_structure = (_structures.length - 1);
+				_polygon = (_structures[_structure].polygons.length - 1);
+				render();
+			}	
+		}
+	});
 }
 
-function save(exit){
+function save(auto){
 	var _index = 0;
 	_structures.forEach(function(structure){
 		if(structure._structureId == null){
 			_index ++
 		}
 	});
-	if(_index > 0){
+	if(_index > 0 && auto == false){
 		Materialize.toast('Debe asociar cada marcaje a una estructura', 3000, 'rounded');
 	}else{
 		var data = JSON.stringify(_structures);
-		ajax("text", {route: "save", data: data, imageId: imageId}, function(res){
-			console.log(res);
-			/*if(res.state == true && exit == true){
-				
-			}else if(res.state == true){
+		ajax("json", {route: "save", data: data, imageId: imageId}, function(res){
+			if(res.state == true){
 				Materialize.toast('Guardado exitoso', 3000, 'rounded');
-			}*/
+			}
 		});
 	}
+}
+
+function code(){
+	var caracteres = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	var longitud = 30;
+	var code = "";
+	for (x=0; x < longitud; x++){
+		rand = Math.floor(Math.random()*caracteres.length);
+		code += caracteres.substr(rand, 1);
+	}
+	return code;
+}
+
+
+function getStructures(Id_Structure, index){
+	index = (index.getAttribute("data-index"));
+	ajax("json", {route: "getStructure", Id_Structure: Id_Structure}, function(res){
+		if(res.state){
+			$("#" + index).empty();
+			$("#" + index).select2({
+				data: res.data
+			});
+		}
+	});
+}
+
+function checkStructure(id, selector){
+	var index = (selector.getAttribute("id"));
+	_structures[index]._structureId = id;
+	_structures[index]._structureName = $("#" + index + " option:selected").text();
 }

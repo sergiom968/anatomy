@@ -1,13 +1,12 @@
 extends layout
 
 block style
-	-var image = data[0]
 	style.
 		body{
 			overflow: hidden;
 		}
 		canvas{
-			background-image: url('#{image.image}');
+			background-image: url('#{data.route}');
 			background-repeat:  no-repeat;
 			background-size: 800px 600px;
 			cursor: crosshair;
@@ -22,35 +21,25 @@ block style
 
 
 block content
-	//pre #{data}
 	.row
+		//pre #{data.structures}
 		.col.m3#rw
 			ul.collapsible(data-collapsible='accordion')
 				li(v-for="structure, index in structures")
-					.collapsible-header(@click="_structure = index; render(); _draw = false;")
+					.collapsible-header(@click="_structure = index;  _draw = false; render();")
 						span.green-text
 							i.material-icons insert_photo
 						| {{structure._structureName}}
-						a.red-text.text-darken-1(@click="deleteStructure(index);")
+						a.red-text.text-darken-1(@click="deleteBrand(index, structure._brandId);")
 							i.material-icons.right cancel
 					.collapsible-body
-						//span
-							.input-field
-								i.material-icons.prefix textsms
-								input#autocomplete-input.autocomplete(type='text')
-								label(for='autocomplete-input') Autocomplete
 						span
 							.input-field
 								textarea#textarea1.materialize-textarea(v-model="structure._brandDescription")
 								label(for='textarea1') Descripción
-
-							select(style="width: 100%;")
-								option(value='1') Option 1
-								option(value='2') Option 2
-								option(value='3') Option 3
-							select(style="width: 100%;")
-							select(style="width: 100%;")
-			pre.col.s12 {{$data}}
+							select.systems(style="width: 100%;", onchange="getStructures(this.value, this);", v-bind:data-index="index")
+							select(style="width: 100%;", v-bind:id="index", onchange="checkStructure(this.value, this);")
+			//pre.col.s12 {{$data}}
 		.col.m9
 			.center
 				canvas#canvas(width="800" height="600" )
@@ -71,11 +60,16 @@ block content
 
 block js
 	script.
-		var imageId = "#{image.Id_Image}";
-		var json = ("#{data}");
+		var imageId = "#{data.Id_Image}";
+		var json = ("#{data.data}");
 		json = json.replace(/&quot;/g,'"');
 		json = JSON.parse(json);
 		_structures = json;
 		vueMarking();
 		render();
-		$('select').select2();
+		var jsonStructures = "#{data.structures}";
+		jsonStructures = jsonStructures.replace(/&quot;/g,'"');
+		jsonStructures = JSON.parse(jsonStructures);
+		$('.systems').select2({
+			data: jsonStructures
+		});

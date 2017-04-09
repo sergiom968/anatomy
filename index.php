@@ -33,7 +33,11 @@
 			$sql = "SELECT image.Id_Image, image.Route, brand.Id_Brand, brand.Description, structure.Id_Structure, structure.Name FROM image INNER JOIN (brand INNER JOIN structure ON brand.Id_Structure = structure.Id_Structure) ON image.Id_Image = brand.Id_Image WHERE image.Id_Image = '" . $_GET["id"] . "';";
 	        $select = $db->select($sql);
 	        $rows = [];
+	        $imageId = "";
+	        $route = "";
 	        while($row = $select->fetch_assoc()){
+	        	$route = $row["Route"];
+	        	$imageId = $row["Id_Image"];
 	        	$sql = "SELECT coordinate.Coordinate FROM coordinate WHERE coordinate.Id_Brand = '" . $row["Id_Brand"] . "';";
 	        	$coordinate = $db->select($sql);
 	        	$coordinates = [];
@@ -41,9 +45,15 @@
 	        	while ($coord = $coordinate->fetch_assoc()) {
 	        		$coordinates[] = json_decode($coord["Coordinate"]);
 	        	}
-	        	$rows[] = array("image" => $row["Route"], "Id_Image" => $row["Id_Image"], "_brandId" => $row["Id_Brand"], "_brandDescription" => $row["Description"], "_structureId" => $row["Id_Structure"], "_structureName" => $row["Name"], "polygons" => (($coordinates)));	
+	        	$rows[] = array("_brandId" => $row["Id_Brand"], "_brandDescription" => $row["Description"], "_structureId" => $row["Id_Structure"], "_structureName" => $row["Name"], "polygons" => (($coordinates)));	
 	        }
-			return loged("marking", ($rows));
+	        $_structures = $db->select("SELECT structure.Id_Structure AS id, structure.Name AS text FROM structure WHERE structure.Id_Structure LIKE 'A%.%.00.000' ORDER BY structure.Id_Structure");
+	        $structure = [];
+	        while($_structure = $_structures->fetch_assoc()){
+	        	$_structure["text"] = utf8_encode($_structure["text"]);
+	        	$structure[] = $_structure;
+	        }
+			return loged("marking", array("structures" => $structure, "route" => $route, "Id_Image" => $imageId, "data" =>$rows));
 		}else{
 			return loged("index");
 		}
@@ -74,6 +84,16 @@
 
 			case 'test':
 				return json_encode(array("test"=> "test"));
+				break;
+
+			case 'getStructure':
+				$response = $_controller->_getStructure($_POST["Id_Structure"]);
+				return $response;
+				break;
+
+			case 'deleteBrand':
+				$response = $_controller->_deleteBrand($_POST["_brandId"]);
+				return $response;
 				break;
 		}
 	});

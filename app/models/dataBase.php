@@ -21,7 +21,7 @@
 			$select->close();
 		}
 
-		function util($sql){
+		function save($sql){
 			$dataBase = $this->Conect();
 			$dataBase->query($sql);
 		}
