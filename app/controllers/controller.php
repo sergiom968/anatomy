@@ -5,7 +5,7 @@
 
 		function _login($_username, $_password){
 			$db = new dataBase();
-			$sql = ("SELECT * FROM `usuario` WHERE `Usuario` = '" . $_username . "' AND `Contrasena` = '" . $_password . "' LIMIT 1;");
+			$sql = ("SELECT * FROM user WHERE user.Username = '" . $_username . "' AND user.Password = '" . $_password . "' LIMIT 1;");
 			$select = $db->select($sql);
 			$json = array();
 			$numero_filas = mysqli_num_rows($select);
@@ -13,11 +13,10 @@
 				$json = array("state" => false);
 			}else{
 				while($row = $select->fetch_assoc()){
-					$nombre = utf8_decode($row["Nombre"]);
 					$json = array("state" => true);
-					setcookie("anatomy_userId", $row["Id_Usuario"], 0, "/");
-					setcookie("anatomy_userType", $row["tipoUsuario"], 0, "/");
-					setcookie("anatomy_userName", $row["Nombre"], 0, "/");
+					setcookie("anatomy_userId", $row["Id_User"], 0, "/");
+					setcookie("anatomy_userType", $row["userType"], 0, "/");
+					setcookie("anatomy_userName", $row["Name"], 0, "/");
 				}
 			}
 			return $json;
@@ -37,6 +36,7 @@
 				foreach ($key->{'polygons'} as $polygons) {
 					$polygons = json_encode($polygons);
 					$db->save("INSERT INTO coordinate (Id_Brand, Coordinate) VALUES ('" . $key->{'_brandId'} . "', '" . $polygons . "');");
+					$db->save("DELETE FROM coordinate WHERE coordinate.Coordinate = '[]';");
 				}
 			}
 			return json_encode(array("state" => true));

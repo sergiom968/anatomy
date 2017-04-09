@@ -19,6 +19,23 @@ block style
 			margin-bottom: 10px;
 		}
 
+		#contextMenu{
+			z-index: 9999;
+			border-radius: 5px;
+			position: absolute;
+			padding: 5px;;
+			/*display: none;*/
+		}
+		#contextMenu li{
+			text-align: center;
+			padding: 3px 8px;
+			border-radius: 5px;
+			cursor: pointer
+		}
+		#contextMenu li:hover{
+			background-color: #bdbdbd;
+		}
+
 
 block content
 	.row
@@ -30,7 +47,7 @@ block content
 						span.green-text
 							i.material-icons insert_photo
 						| {{structure._structureName}}
-						a.red-text.text-darken-1(@click="deleteBrand(index, structure._brandId);")
+						a.red-text.text-darken-1(@click="confirm(index, structure._brandId);")
 							i.material-icons.right cancel
 					.collapsible-body
 						span
@@ -58,6 +75,18 @@ block content
 				a.btn-floating.blue.waves-effect.waves-light(href="javascript:save(false);")
 					i.material-icons save
 
+	#confirm.modal
+		.modal-content
+			h4 Confirmación
+			p ¿Desea eliminar este marcaje?
+		.modal-footer
+			a#btnAcept.waves-effect.waves-light.btn-flat.blue-text.text-darken-3
+				| Aceptar
+			a.modal-action.modal-close.waves-effect.waves-light.btn-flat.red-text.text-darken-3
+				| Cancelar
+	ul#contextMenu.white(onmouseleave="$(this).hide(400);")
+
+
 block js
 	script.
 		var imageId = "#{data.Id_Image}";
@@ -73,3 +102,4 @@ block js
 		$('.systems').select2({
 			data: jsonStructures
 		});
+		$('.modal').modal();

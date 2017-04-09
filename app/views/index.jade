@@ -10,14 +10,14 @@ block content
 						.col.s12.m4
 							.card.z-depth-4
 								.card-image
-									img(src='http://localhost/ProjectInteractiveAnatomy/public/img/#{photo.Ruta}')
+									img(src='#{photo.Route}')
 									a.btn-floating.halfway-fab.waves-effect.waves-light.red.darken-4
 										i.material-icons delete
-									a.btn-floating.halfway-fab.waves-effect.waves-light.amber.accent-4(style="right: 70px;")
+									a.btn-floating.halfway-fab.waves-effect.waves-light.amber.accent-4(style="right: 70px;", href="marking?id=#{photo.Id_Image}")
 										i.material-icons mode_edit
 									//span.card-title Card Title
 								.card-content
 									p
 										span.blue-text.text-darken-3 Última modificación: 
-										| #{photo.ultimaModificacion}
+										| #{photo.lastModification}
 							

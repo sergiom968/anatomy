@@ -14,7 +14,8 @@
 	$_controller = new Controller();
 
 	$router->get('/', function(){ 
-		$sql = "SELECT * FROM imagen WHERE (((imagen.Id_Usuario)='" . $_COOKIE['anatomy_userId'] . "'));";
+		global $db;
+		$sql = "SELECT * FROM image;";
         $select = $db->select($sql);
         $rows = [];
         while($row = $select->fetch_assoc()){
@@ -59,9 +60,12 @@
 		}
 	});
 
-
-	$router->post('/test', function($route = "Hola"){
-		return "ok {$_POST['route']}";
+	$router->get('/exit', function(){ 
+		setcookie("anatomy_idUser", "", time() - 3600, "/");
+		setcookie("anatomy_userName", "", time() - 3600, "/");
+		setcookie("anatomy_userType", "", time() - 3600, "/");
+		header('Location: /anatomy');
+		return  loged("index");
 	});
 
 	$router->get('*', function(){ 

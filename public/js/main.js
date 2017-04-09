@@ -16,7 +16,7 @@ switch(origin){
 		var ctx = canvas.getContext('2d');
 		var ctxPoint = canvas.getContext('2d');
 		ctx.lineJoin = 'round';
-		ctx.lineWidth = 6;
+		ctx.lineWidth = 4;
 		ctx.fillStyle ="#FFC107";
 		ctx.strokeStyle = "#FFC107";
 		align();
@@ -50,14 +50,14 @@ switch(origin){
 			}else{
 				var _point = isPoint(mousePos.x, mousePos.y);
 				if(_point.bool){
-					alert("point");
+					contextMenu(true, evt, _point.index,_point.polygon);
 				}else{
 					var _line = isLine(mousePos.x, mousePos.y);
 					if(_line.bool){
 						_structures[_structure].polygons[_line.polygon].splice(_line.index, 0, {x: mousePos.x, y: mousePos.y});
 						render();
 					}else{
-						//alert("ok1");	
+						contextMenu(false, evt);
 					}
 				}
 			}
@@ -186,6 +186,16 @@ function isPoint(x, y){
 	}
 }
 
+function contextMenu(point, event, _point, polygon){
+	if(point){
+		$("#contextMenu").html("<li onclick='_structures[_structure].polygons[" + polygon + "].splice(" + (_point-1) + ",1); $(\"#contextMenu\").hide(400); render();'>Eliminar punto.</li><li onclick='_structures[_structure].polygons.splice(" + (polygon) + ", 1); if(_structures[_structure].polygons.length == 0){addPolygon();} $(\"#contextMenu\").hide(400); render();'>Eliminar marca.</li>");	
+	}else{
+		$("#contextMenu").html("<li onclick='addPolygon(); $(\"#contextMenu\").hide(400); render();'>Añadir marca.</li>");
+	}
+	$("#contextMenu").css({top: (event.pageY - 20), left: (event.pageX - 5)});
+	$("#contextMenu").show(400);
+}
+
 function login(event){
 	event.preventDefault();
 	var _username = $("#txtuserName").val();
@@ -216,7 +226,13 @@ function addStructure(){
 	render();
 }
 
+function confirm(index, _brandId){
+	$("#btnAcept").attr('onclick', 'deleteBrand(' + index + ', "' + _brandId +'");');
+	$('#confirm').modal('open');
+}
+
 function deleteBrand(index, _brandId){
+	$('#confirm').modal('close');	
 	ajax("json", {route: "deleteBrand", _brandId: _brandId}, function(res){
 		if(res.state){
 			_structures.splice(index, 1);
@@ -227,6 +243,7 @@ function deleteBrand(index, _brandId){
 				_polygon = (_structures[_structure].polygons.length - 1);
 				render();
 			}	
+			Materialize.toast('Marca borrada exitosamente', 3000, 'rounded');
 		}
 	});
 }
