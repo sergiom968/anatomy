@@ -1,13 +1,20 @@
 <?php 
-
+	require 'vendor/autoload.php';
 	use Gregwar\Image\Image;
 	
 	class Tools {
-		
-		function __construct(){
-			
-		}
 
+		function uploadImage($image){
+			$uploaddir = 'public/img/';
+			$code = $this->codeGenerator();
+			$upname = $code . "." . pathinfo($image['name'], PATHINFO_EXTENSION);
+			$uploadfile = $uploaddir . $upname;
+			if (move_uploaded_file($image['tmp_name'], $uploadfile)) {
+				return array("state" => "ok", "name" => $upname, "code" => $code);
+			} else {
+    			return array("state" => "error");
+			}
+		}
 
 		function resizeImage($name){
 			$imagen = getimagesize("public/img/" . $name);
@@ -30,6 +37,16 @@
 				->scaleResize($widthNew, $heightNew, "black")
 				->save('public/img/' . $name);
 			unlink("public/img/copy-" . $name);
+		}
+
+		function codeGenerator(){
+			$key = '';
+			$pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+			$max = strlen($pattern)-1;
+			for($i=0;$i < 20;$i++){
+				$key .= $pattern{mt_rand(0,$max)};
+			}
+			return $key;
 		}
 	}
 ?>

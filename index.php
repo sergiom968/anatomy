@@ -99,6 +99,12 @@
 				$response = $_controller->_deleteBrand($_POST["_brandId"]);
 				return $response;
 				break;
+
+			case 'upload':
+				$response = $_controller->_upload($_FILES["image"], $_POST["source"], $_POST["description"]);
+				header('Location: /anatomy/marking?id=' . $response);
+				//return $response;
+				break;
 		}
 	});
 

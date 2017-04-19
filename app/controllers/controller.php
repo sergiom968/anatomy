@@ -1,5 +1,6 @@
 <?php
 	include_once("app/models/dataBase.php");
+	include_once("app/models/tools.php");
 
 	class Controller{
 
@@ -62,6 +63,26 @@
 				$db->save("DELETE FROM brand WHERE brand.Id_Brand = '" . $_brandId . "';");
 			}
 			return json_encode(array("state" => true));
+		}
+
+		function _upload($_image, $_source, $_description){
+			$db = new dataBase();
+			$tools = new Tools();
+			$res = $tools->uploadImage($_image);
+			if($res["state"] == "ok"){
+				$tools->resizeImage($res['name']);
+				$brand = $tools->codeGenerator();
+				$date = date("Y-m-d");
+				$sql = "INSERT INTO image (Id_Image, Id_User, Source, Route, Description, lastModification) VALUES ('{$res['code']}', {$_COOKIE["anatomy_userId"]}, '{$_source}', 'public/img/{$res['name']}', '{$_description}', '{$date}');";
+				$db->save($sql);
+				$sql = "INSERT INTO brand (Id_Brand, Id_Image, Id_Structure, Description) VALUES ('{$brand}', '{$res['code']}', 'empty', '');";
+				$db->save($sql);
+				$sql = "INSERT INTO coordinate (Id_Brand, Coordinate) VALUES ('{$brand}', '[]');";
+				$db->save($sql);
+				return $res["code"];
+			}else{
+				return "error";
+			}
 		}
 	}
 ?>

@@ -1,7 +1,29 @@
 extends layout
 
 block content
-	form(action="test", method="POST")
-		input(type="text" value="test" name="route")
-		input(type="text" value="testName" name="name")
-		input(type="submit" value="send")
+	.container
+		.section
+			.row
+				.col.s12.m8.offset-m2
+					.card.horizontal.z-depth-4
+						.card-image
+							img(src='public/img/picture.png')
+						form.card-stacked(action='/anatomy/control', method="POST", enctype="multipart/form-data")
+							input(type="hidden", value="upload", name="route")
+							.card-content
+								//h4.center.light Subir imagen
+								//br
+								.input-field.col.s12
+									input#source.validate(type='text', name="source", required)
+									label(for='source') Origen
+								.input-field.col.s12
+									textarea#description.materialize-textarea.validate(name="description", required)
+									label(for='description') Descripción
+								.file-field.input-field.col.s12
+									.btn.blue.darken-3
+										span Imagen
+										input.validate(type='file', name="image", accept='.jpg, .jpge, .png', required)
+									.file-path-wrapper
+										input.file-path.validate(type='text')
+							.card-action
+								button.btn.right.blue.darken-3(type="submit") Guardar
