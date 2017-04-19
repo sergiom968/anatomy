@@ -81,7 +81,7 @@
 				$db->save($sql);
 				return $res["code"];
 			}else{
-				return "error";
+				return $res["error"];
 			}
 		}
 	}

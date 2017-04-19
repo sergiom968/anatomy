@@ -12,7 +12,7 @@
 			if (move_uploaded_file($image['tmp_name'], $uploadfile)) {
 				return array("state" => "ok", "name" => $upname, "code" => $code);
 			} else {
-    			return array("state" => "error");
+    			return array("state" => "error", "error" => $image['error']);
 			}
 		}
 
