@@ -5,7 +5,8 @@
 	class Tools {
 
 		function uploadImage($image){
-			$uploaddir = 'public/img/';
+			//$uploaddir = "{$_SERVER["HTTP_HOST"]}:{$_SERVER["SERVER_PORT"]}/anatomy/public/img/";
+			$uploaddir = "public/img/";
 			$code = $this->codeGenerator();
 			$upname = $code . "." . pathinfo($image['name'], PATHINFO_EXTENSION);
 			$uploadfile = $uploaddir . $upname;
