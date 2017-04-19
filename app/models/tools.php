@@ -5,14 +5,14 @@
 	class Tools {
 
 		function uploadImage($image){
-			$uploaddir = '/anatomy/public/img/';
+			$uploaddir = 'public/img/';
 			$code = $this->codeGenerator();
 			$upname = $code . "." . pathinfo($image['name'], PATHINFO_EXTENSION);
 			$uploadfile = $uploaddir . $upname;
 			if (move_uploaded_file($image['tmp_name'], $uploadfile)) {
 				return array("state" => "ok", "name" => $upname, "code" => $code);
 			} else {
-    			return array("state" => "error", "error" => $image['error']);
+    			return array("state" => "error", "error" => $image['tmp_name']);
 			}
 		}
 
